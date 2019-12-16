@@ -1,0 +1,25 @@
+{
+    "name": "slens",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "repository": "https://github.com/FbN/slens",
+    "author": "Fabiano Taioli <ftaioli@gmail.com>",
+    "license": "MIT",
+    "private": false,
+    "devDependencies": {
+        "ava": "^2.4.0",
+        "eslint": "^6.7.2",
+        "eslint-config-standard": "^14.1.0",
+        "eslint-plugin-import": "^2.18.2",
+        "eslint-plugin-node": "^10.0.0",
+        "eslint-plugin-promise": "^4.2.1",
+        "eslint-plugin-standard": "^4.0.1",
+        "esm": "^3.2.25"
+    },
+    "ava": {
+        "require": [
+            "esm"
+        ]
+    }
+}
