@@ -55,4 +55,16 @@ const path = paths => obj => {
     return val
 }
 
-export { assoc, assocPath, path }
+const over = lens => fn => target =>
+    lens(function (y) {
+        return () => fn(y)
+    })(target)
+
+// const set = lens => v => target =>
+
+const lens = getter => setter => functor => target =>
+    functor(getter(target)).map(function (focus) {
+        return setter(focus)(target)
+    })
+
+export { assoc, assocPath, path, lens, over }
