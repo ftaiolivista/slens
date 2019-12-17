@@ -20,6 +20,12 @@ function nextObj (path, obj) {
             : {}
 }
 
+const updateArray = idx => v => a => {
+    const o = [...a]
+    o[idx] = v
+    return o
+}
+
 const assocPath = path => val => obj => {
     if (path.length === 0) {
         return val
@@ -32,9 +38,7 @@ const assocPath = path => val => obj => {
             )
             : val
     if (Number.isInteger(idx) && Array.isArray(obj)) {
-        const arr = [...obj]
-        arr[idx] = value
-        return arr
+        return updateArray(idx)(value)(obj)
     } else {
         return assoc(idx)(value)(obj)
     }
@@ -55,16 +59,75 @@ const path = paths => obj => {
     return val
 }
 
-const over = lens => fn => target =>
-    lens(function (y) {
-        return () => fn(y)
-    })(target)
+function Identity (x) {
+    return {
+        value: x,
+        map: function (f) {
+            return Identity(f(x))
+        }
+    }
+}
 
-// const set = lens => v => target =>
+const over = l => fn => target => l(y => Identity(fn(y)))(target).value
 
-const lens = getter => setter => functor => target =>
-    functor(getter(target)).map(function (focus) {
-        return setter(focus)(target)
-    })
+function _map (fn, functor) {
+    var idx = 0
+    var len = functor.length
+    var result = Array(len)
+    while (idx < len) {
+        result[idx] = fn(functor[idx])
+        idx += 1
+    }
+    return result
+}
 
-export { assoc, assocPath, path, lens, over }
+function map (fn, functor) {
+    if (functor['fantasy-land/map']) {
+        return functor['fantasy-land/map'](fn)
+    }
+    switch (Object.prototype.toString.call(functor)) {
+    case '[object Function]':
+        return fn.call(this, functor.apply(this, arguments))
+    case '[object Object]':
+        return Object.keys(functor).reduce((acc, key) => {
+            acc[key] = fn(functor[key])
+            return acc
+        }, {})
+    default:
+        return _map(fn, functor)
+    }
+}
+
+const lensPath = p => lens(path(p))(assocPath(p))
+
+const lens = getter => setter => toFunctorFn => target =>
+    map(focus => setter(focus)(target), toFunctorFn(getter(target)))
+
+function Const (x) {
+    return {
+        value: x,
+        'fantasy-land/map': function () {
+            return this
+        }
+    }
+}
+
+const view = l => target => l(Const)(target).value
+
+const prop = p => obj => path([p])(obj)
+
+const lensProp = p => lens(prop(p))(assoc(p))
+
+const lensIndex = n => lens(a => a[n])(updateArray(n))
+
+export {
+    assoc,
+    assocPath,
+    path,
+    lens,
+    over,
+    lensPath,
+    lensProp,
+    view,
+    lensIndex
+}
