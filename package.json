@@ -25,6 +25,6 @@
         ]
     },
     "dependencies": {
-        "memoize-one": "^5.1.1"
+        "moize": "^5.4.4"
     }
 }

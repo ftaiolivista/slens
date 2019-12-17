@@ -1,4 +1,4 @@
-import memoizeOne from 'memoize-one'
+import moize from 'moize'
 
 function _has (prop, obj) {
     return Object.prototype.hasOwnProperty.call(obj, prop)
@@ -125,28 +125,46 @@ const lensIndex = n => lens(a => a[n])(updateArray(n))
 const set = l => v => over(l)(() => v)
 
 function compile (strings, ...values) {
-    let str = ''
+    /**
+     * @type {Object}
+     */
+    let str = []
     strings.forEach((string, i) => {
-        str += string + (values[i] || '')
+        str = str
+            .concat(string.split('.'))
+            .concat((values[i] && values[i].split('.')) || [])
     })
+    str = str.filter(v => v !== '')
+    str._key = strings.raw ? String.raw(strings, ...values) : undefined
     return str
 }
 
-const _mv = memoizeOne(path => view(lensPath(path.split('.'))))
-const _ms = memoizeOne(path => set(lensPath(path.split('.'))))
-const _mo = memoizeOne(path => over(lensPath(path.split('.'))))
+function literalEqual (newArgs, lastArgs) {
+    if (!(newArgs && newArgs._key && lastArgs && lastArgs._key)) {
+        return false
+    }
+    // if (newArgs._key === lastArgs._key) {
+    //     console.log('CACHE HIT', newArgs._key)
+    // } else {
+    //     console.log('CACHE MISS', newArgs._key, lastArgs._key)
+    // }
+    return newArgs._key === lastArgs._key
+}
+
+const pathSee = moize(path => view(lensPath(path)), { equals: literalEqual })
+const pathFix = moize(path => set(lensPath(path)), { equals: literalEqual })
+const pathOff = moize(path => over(lensPath(path)), { equals: literalEqual })
 
 function see (strings, ...values) {
-    return _mv(compile(strings, ...values))
+    return pathSee(compile(strings, ...values))
 }
 
 function fix (strings, ...values) {
-    console.log('Compiled', compile(strings, ...values))
-    return _ms(compile(strings, ...values))
+    return pathFix(compile(strings, ...values))
 }
 
 function off (strings, ...values) {
-    return _mo(compile(strings, ...values))
+    return pathOff(compile(strings, ...values))
 }
 
 export {
@@ -162,5 +180,8 @@ export {
     set,
     see,
     fix,
-    off
+    off,
+    pathSee,
+    pathFix,
+    pathOff
 }

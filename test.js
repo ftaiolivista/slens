@@ -82,3 +82,17 @@ test('fix by template 3', t => {
     const x = 'a'
     t.deepEqual(L.fix`${x}.b.c`(1)(target), { a: { b: { c: 1 } } })
 })
+
+test('fix as array', t => {
+    const target = { a: { b: { c: 0 } } }
+    t.deepEqual(L.fix(['a', 'b'])(1)(target), { a: { b: 1 } })
+})
+
+test('fix test cache', t => {
+    const target = { a: { b: { c: 0 } } }
+    const x = 'a'
+    const y = 'b'
+    t.deepEqual(L.fix`${x}.b`(1)(target), { a: { b: 1 } })
+    t.deepEqual(L.fix`a.${y}`(1)(target), { a: { b: 1 } })
+    t.deepEqual(L.fix`${x}.${y}`(1)(target), { a: { b: 1 } })
+})
