@@ -40,3 +40,27 @@ test('lensIndex', t => {
     t.deepEqual(L.view(a)([0, 1, 2, 3]), 1)
     t.deepEqual(L.view(a)([0]), undefined)
 })
+
+test('set', t => {
+    const a = L.lensProp('x')
+    t.deepEqual(L.set(a)(4)({ x: 1, y: 2 }), { x: 4, y: 2 })
+    t.deepEqual(L.set(a)()({ x: 1, y: 2 }), { x: undefined, y: 2 })
+    t.deepEqual(L.set(a)({ y: 1 })({ x: 1, y: 2 }), { x: { y: 1 }, y: 2 })
+})
+
+test('v', t => {
+    const target = { a: { b: { c: 0 } } }
+    t.deepEqual(L.v`a.b`(target), { c: 0 })
+})
+
+test('s', t => {
+    const target = { a: { b: { c: 0 } } }
+    t.deepEqual(L.s`a.b`(1)(target), { a: { b: 1 } })
+})
+
+test('o', t => {
+    const target = { a: { b: { c: 0 } } }
+    t.deepEqual(L.o`a.b`(v => ({ ...v, d: 1 }))(target), {
+        a: { b: { c: 0, d: 1 } }
+    })
+})

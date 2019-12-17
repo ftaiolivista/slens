@@ -1,3 +1,5 @@
+import memoizeOne from 'memoize-one'
+
 function _has (prop, obj) {
     return Object.prototype.hasOwnProperty.call(obj, prop)
 }
@@ -120,6 +122,24 @@ const lensProp = p => lens(prop(p))(assoc(p))
 
 const lensIndex = n => lens(a => a[n])(updateArray(n))
 
+const set = l => v => over(l)(() => v)
+
+function _v (path) {
+    return view(lensPath(path[0].split('.')))
+}
+
+function _s (path) {
+    return set(lensPath(path[0].split('.')))
+}
+
+function _o (path) {
+    return over(lensPath(path[0].split('.')))
+}
+
+const v = memoizeOne(_v)
+const s = memoizeOne(_s)
+const o = memoizeOne(_o)
+
 export {
     assoc,
     assocPath,
@@ -129,5 +149,9 @@ export {
     lensPath,
     lensProp,
     view,
-    lensIndex
+    lensIndex,
+    set,
+    v,
+    s,
+    o
 }
