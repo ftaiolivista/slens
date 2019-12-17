@@ -136,9 +136,9 @@ function _o (path) {
     return over(lensPath(path[0].split('.')))
 }
 
-const v = memoizeOne(_v)
-const s = memoizeOne(_s)
-const o = memoizeOne(_o)
+const see = memoizeOne(_v)
+const fix = memoizeOne(_s)
+const off = memoizeOne(_o)
 
 export {
     assoc,
@@ -151,7 +151,7 @@ export {
     view,
     lensIndex,
     set,
-    v,
-    s,
-    o
+    see,
+    fix,
+    off
 }

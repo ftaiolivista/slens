@@ -48,19 +48,19 @@ test('set', t => {
     t.deepEqual(L.set(a)({ y: 1 })({ x: 1, y: 2 }), { x: { y: 1 }, y: 2 })
 })
 
-test('v', t => {
+test('see', t => {
     const target = { a: { b: { c: 0 } } }
-    t.deepEqual(L.v`a.b`(target), { c: 0 })
+    t.deepEqual(L.see`a.b`(target), { c: 0 })
 })
 
-test('s', t => {
+test('fix', t => {
     const target = { a: { b: { c: 0 } } }
-    t.deepEqual(L.s`a.b`(1)(target), { a: { b: 1 } })
+    t.deepEqual(L.fix`a.b`(1)(target), { a: { b: 1 } })
 })
 
-test('o', t => {
+test('off', t => {
     const target = { a: { b: { c: 0 } } }
-    t.deepEqual(L.o`a.b`(v => ({ ...v, d: 1 }))(target), {
+    t.deepEqual(L.off`a.b`(v => ({ ...v, d: 1 }))(target), {
         a: { b: { c: 0, d: 1 } }
     })
 })
