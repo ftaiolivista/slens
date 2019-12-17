@@ -124,21 +124,30 @@ const lensIndex = n => lens(a => a[n])(updateArray(n))
 
 const set = l => v => over(l)(() => v)
 
-function _v (path) {
-    return view(lensPath(path[0].split('.')))
+function compile (strings, ...values) {
+    let str = ''
+    strings.forEach((string, i) => {
+        str += string + (values[i] || '')
+    })
+    return str
 }
 
-function _s (path) {
-    return set(lensPath(path[0].split('.')))
+const _mv = memoizeOne(path => view(lensPath(path.split('.'))))
+const _ms = memoizeOne(path => set(lensPath(path.split('.'))))
+const _mo = memoizeOne(path => over(lensPath(path.split('.'))))
+
+function see (strings, ...values) {
+    return _mv(compile(strings, ...values))
 }
 
-function _o (path) {
-    return over(lensPath(path[0].split('.')))
+function fix (strings, ...values) {
+    console.log('Compiled', compile(strings, ...values))
+    return _ms(compile(strings, ...values))
 }
 
-const see = memoizeOne(_v)
-const fix = memoizeOne(_s)
-const off = memoizeOne(_o)
+function off (strings, ...values) {
+    return _mo(compile(strings, ...values))
+}
 
 export {
     assoc,

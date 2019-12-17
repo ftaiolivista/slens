@@ -64,3 +64,21 @@ test('off', t => {
         a: { b: { c: 0, d: 1 } }
     })
 })
+
+test('fix by template', t => {
+    const target = { a: { b: { c: 0 } } }
+    const x = 'b'
+    t.deepEqual(L.fix`a.${x}`(1)(target), { a: { b: 1 } })
+})
+
+test('fix by template 2', t => {
+    const target = { a: { b: { c: 0 } } }
+    const x = 'a'
+    t.deepEqual(L.fix`${x}`(1)(target), { a: 1 })
+})
+
+test('fix by template 3', t => {
+    const target = { a: { b: { c: 0 } } }
+    const x = 'a'
+    t.deepEqual(L.fix`${x}.b.c`(1)(target), { a: { b: { c: 1 } } })
+})
