@@ -3,6 +3,8 @@
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
+    "module": "index.js",
+    "type": "module",
     "repository": "https://github.com/FbN/slens",
     "author": "Fabiano Taioli <ftaioli@gmail.com>",
     "license": "MIT",
