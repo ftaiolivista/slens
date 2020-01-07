@@ -1,4 +1,6 @@
-import moize from 'moize'
+import moizeMod from 'moize'
+
+const moize = moizeMod.default ? moizeMod.default : moizeMod
 
 function _has (prop, obj) {
     return Object.prototype.hasOwnProperty.call(obj, prop)

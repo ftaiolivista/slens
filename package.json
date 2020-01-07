@@ -11,10 +11,10 @@
     "private": false,
     "devDependencies": {
         "ava": "^2.4.0",
-        "eslint": "^6.7.2",
+        "eslint": "^6.8.0",
         "eslint-config-standard": "^14.1.0",
-        "eslint-plugin-import": "^2.18.2",
-        "eslint-plugin-node": "^10.0.0",
+        "eslint-plugin-import": "^2.19.1",
+        "eslint-plugin-node": "^11.0.0",
         "eslint-plugin-promise": "^4.2.1",
         "eslint-plugin-standard": "^4.0.1",
         "esm": "^3.2.25"
@@ -25,6 +25,6 @@
         ]
     },
     "dependencies": {
-        "moize": "^5.4.4"
+        "moize": "^5.4.5"
     }
 }
